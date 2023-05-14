@@ -1,7 +1,9 @@
 package com.example.aeon.entity;
 
-import javax.persistence.*;
 
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -9,35 +11,39 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.util.Date;
 
-@Getter
-@Setter
 @Entity
-@Table(name = "karyawan")
+@Table (name="karyawan")
+@Setter
+@Getter
 public class Karyawan implements Serializable {
 
+    private static final long serialVersionUID = 1L;
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "nama")
-    private String nama;
+    @NotEmpty(message = "harus di isi")
+    @Column(name="nama", length = 100)
+    private String name;
 
-    @Column(name = "jk")
-    private String jk;
+    @Column(name="alamat", length = 100)
+    private String address;
 
-    @Column(name = "alamat")
-    private String alamat;
-
-    @Column(name = "status")
+    @Column(name="status", length = 50)
     private String status;
 
-//    @Column(name = "dob")
-//    @Temporal(TemporalType.TIMESTAMP)
-//    @DateTimeFormat(pattern = "yyMMdd")
-//    private Date dob;
+    @NotEmpty()
+    @Column(name="jk", length = 10)
+    private String gender;
+
+    @Column(name="dob")
+    @Temporal(TemporalType.TIME)
+    @DateTimeFormat(pattern = "yyMMdd")
+    private Date dob;
+
 
 
 
 }
+
 

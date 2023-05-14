@@ -1,47 +1,83 @@
 package com.example.aeon.controller;
 
-import com.example.aeon.dto.KaryawanDTO;
+import com.example.aeon.dto.KaryawanData;
+import com.example.aeon.dto.ResponseData;
+import com.example.aeon.entity.DetailKaryawan;
 import com.example.aeon.entity.Karyawan;
 import com.example.aeon.service.KaryawanService;
+import jakarta.validation.Valid;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-//
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.validation.Errors;
 
-
-@Controller
 @RestController
-@RequestMapping("/karyawan")
+@RequestMapping("/v1/karyawan")
 public class KaryawanController {
 
-    @Autowired
-    KaryawanService karyawanService;
+  @Autowired
+  private KaryawanService karyawanService;
 
-    @PostMapping("/")
-    public KaryawanDTO create(@RequestBody KaryawanDTO request){
-        final Karyawan karyawan = karyawanService.mapToEntity(request);
-        final Karyawan result = karyawanService.create(karyawan);
-        return karyawanService.mapToDTO(result);
+  @Autowired
+  private ModelMapper modelMapper;
+
+  @PostMapping
+  public ResponseEntity<ResponseData<Karyawan>> save(@Valid @RequestBody KaryawanData karyawanData, Errors errors){
+
+    ResponseData<Karyawan> responseKaryawanData = new ResponseData<>();
+    ResponseData<DetailKaryawan> responseDetailData = new ResponseData<>();
+    if(errors.hasErrors()){
+      for (ObjectError error: errors.getAllErrors()){
+        responseKaryawanData.getMessages().add(error.getDefaultMessage());
+        responseDetailData.getMessages().add(error.getDefaultMessage());
+      }
+      responseKaryawanData.setStatus(false);
+      responseKaryawanData.setPayload(null);
+      responseDetailData.setStatus(false);
+      responseDetailData.setPayload(null);
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseKaryawanData);
     }
 
-    @PutMapping("/{id}")
-    public KaryawanDTO update(@PathVariable Long id, @RequestBody KaryawanDTO request){
-        final Karyawan karyawan = karyawanService.mapToEntity(request);
-        final Karyawan result = karyawanService.update(id,karyawan);
-        return karyawanService.mapToDTO(result);
+    Karyawan karyawan = modelMapper.map(karyawanData, Karyawan.class);
+    DetailKaryawan detailKaryawan = modelMapper.map(karyawanData, Karyawan.class);
+
+    responseData.setStatus(true);
+    responseData.setPayload(karyawanService.save(karyawan));
+    esponseData.setStatus(true);
+    responseData.setPayload(karyawanService.save(karyawan));
+    return ResponseEntity.ok(responseData);
+  }
+
+  @GetMapping
+  public Iterable<Karyawan> findAll(){
+    return karyawanService.findAll();
+  }
+
+  @GetMapping("/{id}")
+  public Karyawan findById(@PathVariable("id") Long id){
+    return karyawanService.findById(id);
+  }
+
+  @PutMapping
+  public ResponseEntity<ResponseData<Karyawan>> update(@Valid @RequestBody KaryawanData karyawanData, Errors errors){
+
+    ResponseData<Karyawan> responseData = new ResponseData<>();
+    if(errors.hasErrors()){
+      for (ObjectError error: errors.getAllErrors()){
+        responseData.getMessages().add(error.getDefaultMessage());
+      }
+      responseData.setStatus(false);
+      responseData.setPayload(null);
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseData);
     }
 
-    @GetMapping("/list")
-    public List<KaryawanDTO> findAll(){
-        return karyawanService.findAll().stream().map(karyawan -> karyawanService.mapToDTO(karyawan)).collect(Collectors.toList());
-    }
+    Karyawan karyawan = modelMapper.map(karyawanData, Karyawan.class);
 
-//    @GetMapping("/{id}")
-//    public Karyawan find(@PathVariable Long id){
-//        return  karyawanService.findById(id);
-//    }
-
-
+    responseData.setStatus(true);
+    responseData.setPayload(karyawanService.save(karyawan));
+    return ResponseEntity.ok(responseData);
+  }
 }

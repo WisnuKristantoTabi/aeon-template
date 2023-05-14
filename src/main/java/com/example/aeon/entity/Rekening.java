@@ -4,16 +4,14 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
-@Table(name="karyawan_training")
+@Table(name="rekening")
 @Setter
 @Getter
-public class KaryawanTraining implements Serializable {
+public class Rekening implements Serializable  {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -21,14 +19,16 @@ public class KaryawanTraining implements Serializable {
     private long id;
 
     @NotEmpty(message = "harus di isi")
-    @Column(name="tanggal_training")
-    @Temporal(TemporalType.TIME)
-    @DateTimeFormat(pattern = "yyMMdd")
-    private Date dateTraining;
+    @Column(name= "jenis", length = 100)
+    private String type;
+
+    @Column(name= "nama", length = 100)
+    private String name;
+
+    @Column(name= "nomor", length = 100)
+    private String number;
 
     @ManyToOne
     private Karyawan karyawan;
 
-    @ManyToOne
-    private Training training;
 }
