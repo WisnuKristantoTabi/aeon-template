@@ -42,13 +42,14 @@ public class KaryawanController {
     }
 
     Karyawan karyawan = modelMapper.map(karyawanData, Karyawan.class);
-    DetailKaryawan detailKaryawan = modelMapper.map(karyawanData, Karyawan.class);
+//    DetailKaryawan detailKaryawan = modelMapper.map(karyawanData, Karyawan.class);
 
-    responseData.setStatus(true);
-    responseData.setPayload(karyawanService.save(karyawan));
-    esponseData.setStatus(true);
-    responseData.setPayload(karyawanService.save(karyawan));
-    return ResponseEntity.ok(responseData);
+//    responseData.setStatus(true);
+//    responseData.setPayload(karyawanService.save(karyawan));
+//    esponseData.setStatus(true);
+//    responseData.setPayload(karyawanService.save(karyawan));
+//    return ResponseEntity.ok(responseData);
+    return null;
   }
 
   @GetMapping
